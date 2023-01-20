@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'bmi_brain.dart';
 import 'constants.dart';
 import 'gender_card.dart';
+import 'result_page.dart';
 import 'reusable_card.dart';
 
 class InputPage extends StatefulWidget {
@@ -32,7 +34,7 @@ class _InputPageState extends State<InputPage> {
   //   }
   // }
   Gender selectedGender = Gender.none;
-  int userHeight = 180;
+  double userHeight = 180;
   int userWeight = 80;
   int userAge = 20;
 
@@ -128,7 +130,7 @@ class _InputPageState extends State<InputPage> {
                       value: userHeight.toDouble(),
                       onChanged: (double newHeight) {
                         setState(() {
-                          userHeight = newHeight.round();
+                          userHeight = newHeight;
                         });
                       },
                       min: 120.0,
@@ -227,15 +229,29 @@ class _InputPageState extends State<InputPage> {
               ],
             ),
           ),
-          Container(
-            width: double.infinity,
-            color: Color(0xFFEB1555),
-            margin: EdgeInsets.only(top: 5),
-            height: 60,
-            child: Center(
-              child: Text(
-                "Calculate your BMI",
-                style: kLabelTextStyle.copyWith(fontSize: 24.0),
+          GestureDetector(
+            onTap: () {
+              BmiBrain calc = BmiBrain(height: userHeight, weight: userWeight);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResultPage(
+                            state: calc.stateFunction(),
+                            resultBmi: calc.returnBmi(),
+                            advice: calc.getInterpretation(),
+                          )));
+            },
+            child: Container(
+              width: double.infinity,
+              color: Color(0xFFEB1555),
+              margin: EdgeInsets.only(top: 5),
+              height: 65,
+              child: Center(
+                child: Text(
+                  "CALCULATE",
+                  style: kLabelTextStyle.copyWith(
+                      fontSize: 25.0, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
